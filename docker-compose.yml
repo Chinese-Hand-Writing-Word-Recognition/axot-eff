@@ -1,0 +1,29 @@
+# build Image from Docker Hub
+version: "2.4"
+services:
+  lab:
+    image: "shungfu/envd"
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - DISPLAY=$DISPLAY
+      - PYTHONIOENCODING=utf-8
+      - LANG=C.UTF-8
+      - LC_IDENTIFICATION=C.UTF-8
+      - LC_ADDRESS=C.UTF-8
+      - LC_NEMERIC=lzh_TW
+      - LC_MEASUREMENT=C.UTF-8
+    stdin_open: true
+    tty: true
+    volumes: 
+      - .:/home/user/code
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+      - "5002:5002"
+      - "5003:5003"
+      - "5004:5004"
+      - "5005:5005"
+    command: "nvidia-smi"
+    ipc: host
