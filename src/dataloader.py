@@ -20,29 +20,22 @@ def load_csv(path, root="/kaggle/input/unicode", encoding='utf-8'):
 
 def get_image_transforms(level=0):
     img_size = config.img_size
-    level=1
-    if level == 0:
-    # Data Transforms
-        tf_train = transforms.Compose([
-            transforms.Resize((img_size, img_size)),
-            transforms.ToTensor(),
-        ])
-    else:
-        level = min(5, level)
-        p = [0.2, 0.3, 0.4, 0.5][level-1]
-        distortion_scale = [0.2, 0.3, 0.4, 0.5][level-1]
-        scale = [(0.1, 0.2), (0.15, 0.25), (0.15, 0.3), (0.2, 0.35)][level-1]
-        tf_train = transforms.Compose([
-            transforms.Resize((img_size, img_size)),
-            # transforms.RandomApply([
-            #     transforms.RandomChoice([
-            #         transforms.Pad(round(img_size * 0.06)),
-            #         transforms.RandomCrop(round(img_size * 0.94)),
-            #     ]),
-            #     transforms.Resize((img_size, img_size))
-            # ], p=0.4),
-            transforms.ToTensor(),
-        ])
+    crop_size = (round(img_size * 0.9), round(img_size * 0.9))
+    padding = round(img_size * 0.1)
+    fill = (0, 0, 255)
+    degrees = (15, 30)
+
+    tf_train = transforms.Compose([
+        transforms.Resize((img_size, img_size)),
+        transforms.RandomApply([
+            transforms.RandomChoice([
+                transforms.Pad(padding),
+                transforms.RandomCrop(crop_size),
+            ]),
+            transforms.Resize((img_size, img_size))
+        ], p=0.6),
+        transforms.ToTensor(),
+    ])
     tf_valid = transforms.Compose([
         transforms.Resize((img_size, img_size)),
         transforms.ToTensor(),

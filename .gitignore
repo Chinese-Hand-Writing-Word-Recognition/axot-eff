@@ -1,2 +1,4 @@
 data/*
 save_model/*
+src/__pycache__
+

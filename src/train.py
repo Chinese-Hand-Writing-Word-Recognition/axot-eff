@@ -81,8 +81,8 @@ def train(model, save_path = './efnet.pth'):
     
     model.to(device)
     criterion = nn.CrossEntropyLoss(weight=get_class_weight().to(device))
-    optimizer = optim.SGD(model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay)
-    # optimizer = Ranger(model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay)
+    # optimizer = optim.SGD(model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay)
+    optimizer = Ranger(model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay)
     f1_score = F1Score()
 
     best_f1 = 0.0
@@ -127,7 +127,8 @@ def train(model, save_path = './efnet.pth'):
             
             progress_bar.set_description(f"[Train]: loss: {sum_train_loss/(i+1): .5f}, acc: {sum_train_acc/(i+1): .5f}")
             progress_bar.update()
-          
+        
+
         # Validation
         model.eval()
         sum_valid_loss = 0.0
@@ -171,12 +172,11 @@ def train(model, save_path = './efnet.pth'):
 
 
 def main():
-    # model = EfNetModel(num_classes=801, dropout=config.dropout, pretrained_path=config.pretrained_path)
-    model = EfNetModel(num_classes=801, dropout=config.dropout)
+    model = EfNetModel(num_classes=801, dropout=config.dropout, pretrained_path=config.pretrained_path)
+    # model = EfNetModel(num_classes=801, dropout=config.dropout)
     # output_test(config.pretrained_path)
-    save_path = "eff_pure_cut.pth"
-    train(model, save_path=save_path)
-    output_test(save_path)
+    train(model, save_path=config.save_name)
+    output_test(config.save_name)
 
 
 if __name__ == "__main__":
