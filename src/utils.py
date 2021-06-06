@@ -16,13 +16,20 @@ def get_class_weight(path=f"{config.data_root}/train.csv"):
 
 
 def get_predict_index(pred: torch.Tensor, threshold=config.threshold):
-    # pred.argmax(dim=-1)
+    # detach graph
     pred = pred.detach()
+
+    # get probabilities
     pred = F.softmax(pred, dim=1)
+
+    # if the prob of "isnull" is less than threshold, set the prob of "isnull" to threshold
     indices = torch.logical_not(torch.gt(pred[:, -1], threshold))
     pred[:, -1][indices] = threshold
+
+    # argmax
     pred = pred.argmax(dim=-1)
     return pred
+
 
 def compute_acc(pred, target):
     return (get_predict_index(pred) == target).float().mean()
