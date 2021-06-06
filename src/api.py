@@ -89,8 +89,8 @@ def predict(image):
     img = tfms(PIL_img).unsqueeze(0)
     with torch.no_grad():
         preds = model(img.to(device))
-    pred_idx = get_predict_index(pred_idx, threshold=config.threshold)
-    prediction = label_map[pred.item()]
+    pred_idx = get_predict_index(preds, threshold=config.threshold)
+    prediction = label_map[pred_idx.item()]
 
     ####################################################
     if _check_datatype_to_string(prediction):
